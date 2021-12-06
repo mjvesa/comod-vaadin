@@ -41,6 +41,14 @@ import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-button.js";
 import "@vaadin/vaadin-icons";
 import "./leiskator-grid.js";
 
+import "@vaadin/vaadin-lumo-styles/color.js";
+import "@vaadin/vaadin-lumo-styles/sizing.js";
+import "@vaadin/vaadin-lumo-styles/spacing.js";
+import "@vaadin/vaadin-lumo-styles/style.js";
+import "@vaadin/vaadin-lumo-styles/typography.js";
+
+import { modelToJava } from "./java";
+
 const paletteContent = [
   [
     "<h2>Templates</h2>",
@@ -396,6 +404,7 @@ const javaToAtir = (code) => {
   const elStack = [];
   const createStack = [];
 
+  const fullCode = `
   const makeTag = function (tag) {
     const setPropAttr = (key, value) => {
       result.push(key);
@@ -447,6 +456,8 @@ const javaToAtir = (code) => {
   const VerticalLayout = makeTag("vaadin-vertical-layout");
   const HorizontalLayout = makeTag("vaadin-horizontal-layout");
   const IronIcon = makeTag("iron-icon");
+  ${typelessJavaTemplate}
+`;
 
   const thizz = {
     add: () => {
@@ -467,7 +478,7 @@ const javaToAtir = (code) => {
     },
   };
   elStack.push(thizz);
-  eval(typelessJavaTemplate);
+  eval(fullCode);
   elStack.pop();
   elStack.forEach((el) => {
     result.push(")");
@@ -628,12 +639,24 @@ const modelToDOM = (code, target, inert = false) => {
   return current;
 };
 
+const updateComponent = (tree, src) => {
+  if (isJavaComponent(src)) {
+    const javaCode = modelToJava(tree);
+    const startIndex = src.indexOf("\n", src.indexOf(JAVA_TEMPLATE_BEGIN));
+    const endIndex = src.indexOf(JAVA_TEMPLATE_END);
+    return src.slice(0, startIndex + 1) + javaCode + src.slice(endIndex - 1);
+    // 1. Get java code for tree
+    // 2. replace the code between the markers
+  } else if (isWebComponent(src)) {
+    return src.replace(/html`([\s\S]*)`;/, "html`" + ATIRToXML(tree) + "`;");
+  }
+};
+
 window.Comod = {
   palette: paletteContent,
   fileExtensions: ["ts", "java"],
   parse: parseComponent,
-  update: (tree, src) =>
-    src.replace(/html`([\s\S]*)`;/, "html`" + ATIRToXML(tree) + "`;"),
+  update: updateComponent,
   render: modelToDOM,
 };
 
