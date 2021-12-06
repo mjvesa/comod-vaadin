@@ -49,6 +49,8 @@ import "@vaadin/vaadin-lumo-styles/typography.js";
 
 import { modelToJava } from "./java";
 
+const components = {};
+
 const paletteContent = [
   [
     "<h2>Templates</h2>",
@@ -500,11 +502,15 @@ const isJavaComponent = (content) => {
   );
 };
 
-const parseComponent = (content) => {
+const parseComponent = (tag, content) => {
   if (isWebComponent(content)) {
-    return HTMLToATIR(content);
+    const tree = HTMLToATIR(content);
+    components[tag] = tree;
+    return tree;
   } else if (isJavaComponent(content)) {
-    return javaToAtir(content);
+    const tree = javaToAtir(content);
+    components[tag] = tree;
+    return tree;
   }
   return "";
 };
@@ -577,17 +583,16 @@ const modelToDOM = (code, target, inert = false) => {
         tree.push(current);
         const tag = stack.pop();
         // Nested designs, attach shadow root, append style and content
-        /*    if (tag in storedDesigns.designs) {
-            current = document.createElement("div");
-            current.attachShadow({ mode: "open" });
-            const style = document.createElement("style");
-            style.textContent = storedDesigns.designs[tag].css;
-            current.shadowRoot.appendChild(style);
-            modelToDOM(storedDesigns.designs[tag].tree, current.shadowRoot, true);
-          } else {
-            current = document.createElement(tag);
-          }*/
-        current = document.createElement(tag);
+        if (tag in components) {
+          current = document.createElement("div");
+          current.attachShadow({ mode: "open" });
+          //const style = document.createElement("style");
+          //style.textContent = storedDesigns.designs[tag].css;
+          //current.shadowRoot.appendChild(style);
+          modelToDOM(components[tag], current.shadowRoot, true);
+        } else {
+          current = document.createElement(tag);
+        }
         if (!inert) {
           current.setAttribute("data-design-id", index);
           /*
@@ -652,12 +657,17 @@ const updateComponent = (tree, src) => {
   }
 };
 
+const render = (tag, tree, target) => {
+  components[tag] = tree;
+  modelToDOM(tree, target);
+};
+
 window.Comod = {
   palette: paletteContent,
   fileExtensions: ["ts", "java"],
   parse: parseComponent,
   update: updateComponent,
-  render: modelToDOM,
+  render: render,
 };
 
 console.log("bundle loaded");
