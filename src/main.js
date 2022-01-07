@@ -1,3 +1,5 @@
+import "@vaadin/vaadin-lumo-styles/all-imports.js";
+
 import "@vaadin/vaadin-accordion/theme/lumo/vaadin-accordion.js";
 import "@vaadin/vaadin-accordion/theme/lumo/vaadin-accordion.js";
 import "@vaadin/vaadin-notification/theme/lumo/vaadin-notification.js";
@@ -39,17 +41,15 @@ import "@vaadin/vaadin-dialog/theme/lumo/vaadin-dialog.js";
 import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-group.js";
 import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-button.js";
 import "@vaadin/vaadin-icons";
-import "./leiskator-grid.js";
-
-import "@vaadin/vaadin-lumo-styles/color.js";
-import "@vaadin/vaadin-lumo-styles/sizing.js";
-import "@vaadin/vaadin-lumo-styles/spacing.js";
-import "@vaadin/vaadin-lumo-styles/style.js";
-import "@vaadin/vaadin-lumo-styles/typography.js";
 
 import { modelToJava } from "./java";
 
 const components = {};
+
+const template = document.createElement("template");
+template.innerHTML =
+  '<custom-style><style include="lumo-color lumo-typography lumo-utility lumo-badge"></style></custom-style>';
+document.head.appendChild(template.content);
 
 const paletteContent = [
   [
@@ -621,18 +621,12 @@ const modelToDOM = (code, target, inert = false) => {
         if (current && current !== target) {
           const tos = stack.pop();
           const nos = stack.pop().replace("data-temp-", "");
-          if (nos in current) {
-            try {
-              const json = JSON.parse(tos);
-              current[nos] = json;
-            } catch (e) {
-              current[nos] = tos;
-              current.setAttribute(nos, tos);
-            }
+          if (nos === "textContent") {
+            const textEl = document.createTextNode(tos);
+            current.appendChild(textEl);
           } else {
             current.setAttribute(nos, tos);
           }
-
           break;
         }
       }
@@ -670,4 +664,8 @@ window.Comod = {
   render: render,
 };
 
-console.log("bundle loaded");
+//window.ShadyCSS.CustomStyleInterface.processStyles();
+
+console.log("### bundle loaded ###");
+
+console.log(document.styleSheets);
