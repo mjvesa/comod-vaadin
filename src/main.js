@@ -576,60 +576,6 @@ const ATIRToXML = (atir) => {
   return result;
 };
 
-const modelToDOM_old_not_in_use = (code, target, inert = false) => {
-  const stack = [];
-  const tree = [];
-  let current = target;
-  code.forEach((str, index) => {
-    const trimmed = str.trim();
-    switch (trimmed) {
-      case "(": {
-        const old = current;
-        tree.push(current);
-        const tag = stack.pop();
-        // Nested designs, attach shadow root, append style and content
-        if (tag in components) {
-          current = document.createElement("div");
-          current.attachShadow({ mode: "open" });
-          //const style = document.createElement("style");
-          //style.textContent = storedDesigns.designs[tag].css;
-          //current.shadowRoot.appendChild(style);
-          modelToDOM(components[tag], current.shadowRoot, true);
-        } else {
-          current = document.createElement(tag);
-        }
-        if (!inert) {
-          current.setAttribute("data-design-id", index);
-          current.draggable = "true";
-        }
-        old.appendChild(current);
-        break;
-      }
-      case ")": {
-        current = tree.pop();
-        break;
-      }
-      case "=": {
-        if (current && current !== target) {
-          const tos = stack.pop();
-          const nos = stack.pop().replace("data-temp-", "");
-          if (nos === "textContent") {
-            const textEl = document.createTextNode(tos);
-            current.appendChild(textEl);
-          } else {
-            current.setAttribute(nos, tos);
-          }
-          break;
-        }
-      }
-      default: {
-        stack.push(trimmed);
-      }
-    }
-  });
-  return current;
-};
-
 const modelToDOM = (code, inert = false) => {
   const stack = [];
   const tree = [];
