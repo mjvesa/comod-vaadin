@@ -44,6 +44,10 @@ import "@vaadin/vaadin-icons";
 
 import { modelToJava } from "./java";
 
+import { init, h, attributesModule, datasetModule } from "snabbdom";
+
+const patch = init([attributesModule, datasetModule]);
+
 const components = {};
 
 const template = document.createElement("template");
@@ -393,6 +397,7 @@ const HTMLToATIR = (html, ignoreHead = false) => {
   console.log("THE MODEL: " + JSON.stringify(atir));
   return atir;
 };
+
 const javaToAtir = (code) => {
   const index = code.indexOf(JAVA_TEMPLATE_BEGIN);
   const index2 = code.indexOf(JAVA_TEMPLATE_END, index);
@@ -504,7 +509,8 @@ const isJavaComponent = (content) => {
 
 const parseComponent = (tag, content) => {
   if (isWebComponent(content)) {
-    const tree = HTMLToATIR(content);
+    const htmlContent = content.match(/html`([\s\S]*)`;/)[1];
+    const tree = HTMLToATIR(htmlContent);
     components[tag] = tree;
     return tree;
   } else if (isJavaComponent(content)) {
@@ -570,11 +576,10 @@ const ATIRToXML = (atir) => {
   return result;
 };
 
-const modelToDOM = (code, target, inert = false) => {
+const modelToDOM_old_not_in_use = (code, target, inert = false) => {
   const stack = [];
   const tree = [];
   let current = target;
-  // current = target;
   code.forEach((str, index) => {
     const trimmed = str.trim();
     switch (trimmed) {
@@ -595,20 +600,7 @@ const modelToDOM = (code, target, inert = false) => {
         }
         if (!inert) {
           current.setAttribute("data-design-id", index);
-          /*
-            current.ondragstart = (event) => {
-              startDragFromModel(index, event);
-            };
-            current.ondblclick = (event) => {
-              navigateTo(event);
-            };
-  
-            current.oncontextmenu = (event) => {
-              insertCssRule(event.target);
-              event.stopPropagation();
-              event.preventDefault();
-            };*/
-          current.draggable = true;
+          current.draggable = "true";
         }
         old.appendChild(current);
         break;
@@ -638,6 +630,63 @@ const modelToDOM = (code, target, inert = false) => {
   return current;
 };
 
+const modelToDOM = (code, inert = false) => {
+  const stack = [];
+  const tree = [];
+  let current = { tag: "div", attributes: {}, dataset: {}, children: [] };
+  code.forEach((str, index) => {
+    const trimmed = str.trim();
+    switch (trimmed) {
+      case "(": {
+        const tag = stack.pop();
+        // Nested designs, attach shadow root, append style and content
+        if (tag in components) {
+          //const style = document.createElement("style");
+          //style.textContent = storedDesigns.designs[tag].css;
+          //current.shadowRoot.appendChild(style);
+          current.children.push(modelToDOM(components[tag], true));
+        } else {
+          tree.push(current);
+          current = { tag, attributes: {}, dataset: {}, children: [] };
+        }
+        if (!inert) {
+          current.dataset["nodeId"] = index;
+          current.attributes["draggable"] = "true";
+        }
+        break;
+      }
+      case ")": {
+        const vnode = h(
+          current.tag,
+          { attrs: current.attributes, dataset: current.dataset },
+          current.children
+        );
+        current = tree.pop();
+        current.children.push(vnode);
+        break;
+      }
+      case "=": {
+        const tos = stack.pop();
+        const nos = stack.pop().replace("data-temp-", ""); // for live mode
+        if (nos === "textContent") {
+          current.children.push(tos);
+        } else {
+          current.attributes[nos] = tos;
+        }
+        break;
+      }
+      default: {
+        stack.push(trimmed);
+      }
+    }
+  });
+  return h(
+    current.tag,
+    { attrs: current.attributes, dataset: current.dataset },
+    current.children
+  );
+};
+
 const updateComponent = (tree, src) => {
   if (isJavaComponent(src)) {
     const javaCode = modelToJava(tree);
@@ -651,9 +700,18 @@ const updateComponent = (tree, src) => {
   }
 };
 
+let initialRender = true;
+let oldvnode;
 const render = (tag, tree, target) => {
   components[tag] = tree;
-  modelToDOM(tree, target);
+  const vnode = modelToDOM(tree);
+  if (initialRender) {
+    patch(target, vnode);
+    initialRender = false;
+  } else {
+    patch(oldvnode, vnode);
+  }
+  oldvnode = vnode;
 };
 
 window.Comod = {
@@ -663,8 +721,6 @@ window.Comod = {
   update: updateComponent,
   render: render,
 };
-
-//window.ShadyCSS.CustomStyleInterface.processStyles();
 
 console.log("### bundle loaded ###");
 
