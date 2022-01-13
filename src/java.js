@@ -29,7 +29,6 @@ export const modelToJava = (code) => {
   const singleIndent = "    ";
   const doubleIndent = singleIndent + singleIndent;
   const importedTags = new Set();
-  let internalClasses = "";
   const stack = [];
   const tree = [];
   const variableStack = [];
@@ -99,26 +98,7 @@ export const modelToJava = (code) => {
           return;
         }
 
-        if (nos === "targetRoute") {
-          result = result.concat(
-            `${doubleIndent}${currentVar}.getElement().addEventListener("click", e-> {\n` +
-              `${doubleIndent}${singleIndent}${currentVar}.getUI().ifPresent(ui -> ui.navigate("${kebabToPascalCase(
-                tos
-              )}"))\n;` +
-              `${doubleIndent}});`
-          );
-        } else if (nos === "fieldName") {
-          const fieldName = tos;
-          result = result.replace(currentVarDefinition, fieldName);
-          const re = new RegExp(currentVar, "g");
-          result = result.replace(re, fieldName);
-          fields =
-            fields +
-            `${singleIndent}${
-              currentVarDefinition.split(" ")[0]
-            } ${fieldName};\n`;
-          currentVar = fieldName;
-        } else if (nos in current) {
+        if (nos in current) {
           try {
             JSON.parse(tos);
             if (nos === "textContent") {

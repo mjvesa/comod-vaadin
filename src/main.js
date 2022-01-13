@@ -1,3 +1,5 @@
+import "@vaadin/vaadin-lumo-styles/all-imports.js";
+
 import "@vaadin/vaadin-accordion/theme/lumo/vaadin-accordion.js";
 import "@vaadin/vaadin-accordion/theme/lumo/vaadin-accordion.js";
 import "@vaadin/vaadin-notification/theme/lumo/vaadin-notification.js";
@@ -39,17 +41,19 @@ import "@vaadin/vaadin-dialog/theme/lumo/vaadin-dialog.js";
 import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-group.js";
 import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-button.js";
 import "@vaadin/vaadin-icons";
-import "./leiskator-grid.js";
-
-import "@vaadin/vaadin-lumo-styles/color.js";
-import "@vaadin/vaadin-lumo-styles/sizing.js";
-import "@vaadin/vaadin-lumo-styles/spacing.js";
-import "@vaadin/vaadin-lumo-styles/style.js";
-import "@vaadin/vaadin-lumo-styles/typography.js";
 
 import { modelToJava } from "./java";
 
+import { init, h, attributesModule, datasetModule } from "snabbdom";
+
+const patch = init([attributesModule, datasetModule]);
+
 const components = {};
+
+const template = document.createElement("template");
+template.innerHTML =
+  '<custom-style><style include="lumo-color lumo-typography lumo-utility lumo-badge"></style></custom-style>';
+document.head.appendChild(template.content);
 
 const paletteContent = [
   [
@@ -393,6 +397,7 @@ const HTMLToATIR = (html, ignoreHead = false) => {
   console.log("THE MODEL: " + JSON.stringify(atir));
   return atir;
 };
+
 const javaToAtir = (code) => {
   const index = code.indexOf(JAVA_TEMPLATE_BEGIN);
   const index2 = code.indexOf(JAVA_TEMPLATE_END, index);
@@ -504,7 +509,8 @@ const isJavaComponent = (content) => {
 
 const parseComponent = (tag, content) => {
   if (isWebComponent(content)) {
-    const tree = HTMLToATIR(content);
+    const htmlContent = content.match(/html`([\s\S]*)`;/)[1];
+    const tree = HTMLToATIR(htmlContent);
     components[tag] = tree;
     return tree;
   } else if (isJavaComponent(content)) {
@@ -570,78 +576,61 @@ const ATIRToXML = (atir) => {
   return result;
 };
 
-const modelToDOM = (code, target, inert = false) => {
+const modelToDOM = (code, inert = false) => {
   const stack = [];
   const tree = [];
-  let current = target;
-  // current = target;
+  let current = { tag: "div", attributes: {}, dataset: {}, children: [] };
   code.forEach((str, index) => {
     const trimmed = str.trim();
     switch (trimmed) {
       case "(": {
-        const old = current;
-        tree.push(current);
         const tag = stack.pop();
         // Nested designs, attach shadow root, append style and content
         if (tag in components) {
-          current = document.createElement("div");
-          current.attachShadow({ mode: "open" });
           //const style = document.createElement("style");
           //style.textContent = storedDesigns.designs[tag].css;
           //current.shadowRoot.appendChild(style);
-          modelToDOM(components[tag], current.shadowRoot, true);
+          current.children.push(modelToDOM(components[tag], true));
         } else {
-          current = document.createElement(tag);
+          tree.push(current);
+          current = { tag, attributes: {}, dataset: {}, children: [] };
         }
         if (!inert) {
-          current.setAttribute("data-design-id", index);
-          /*
-            current.ondragstart = (event) => {
-              startDragFromModel(index, event);
-            };
-            current.ondblclick = (event) => {
-              navigateTo(event);
-            };
-  
-            current.oncontextmenu = (event) => {
-              insertCssRule(event.target);
-              event.stopPropagation();
-              event.preventDefault();
-            };*/
-          current.draggable = true;
+          current.dataset["nodeId"] = index;
+          current.attributes["draggable"] = "true";
         }
-        old.appendChild(current);
         break;
       }
       case ")": {
+        const vnode = h(
+          current.tag,
+          { attrs: current.attributes, dataset: current.dataset },
+          current.children
+        );
         current = tree.pop();
+        current.children.push(vnode);
         break;
       }
       case "=": {
-        if (current && current !== target) {
-          const tos = stack.pop();
-          const nos = stack.pop().replace("data-temp-", "");
-          if (nos in current) {
-            try {
-              const json = JSON.parse(tos);
-              current[nos] = json;
-            } catch (e) {
-              current[nos] = tos;
-              current.setAttribute(nos, tos);
-            }
-          } else {
-            current.setAttribute(nos, tos);
-          }
-
-          break;
+        const tos = stack.pop();
+        const nos = stack.pop().replace("data-temp-", ""); // for live mode
+        if (nos === "textContent") {
+          current.children.push(tos);
+        } else {
+          current.attributes[nos] = tos;
         }
+        break;
       }
       default: {
         stack.push(trimmed);
       }
     }
   });
-  return current;
+  return h(
+    current.tag,
+    { attrs: current.attributes, dataset: current.dataset },
+    current.children
+  );
 };
 
 const updateComponent = (tree, src) => {
@@ -657,9 +646,18 @@ const updateComponent = (tree, src) => {
   }
 };
 
+let initialRender = true;
+let oldvnode;
 const render = (tag, tree, target) => {
   components[tag] = tree;
-  modelToDOM(tree, target);
+  const vnode = modelToDOM(tree);
+  if (initialRender) {
+    patch(target, vnode);
+    initialRender = false;
+  } else {
+    patch(oldvnode, vnode);
+  }
+  oldvnode = vnode;
 };
 
 window.Comod = {
@@ -670,4 +668,6 @@ window.Comod = {
   render: render,
 };
 
-console.log("bundle loaded");
+console.log("### bundle loaded ###");
+
+console.log(document.styleSheets);

@@ -162,7 +162,7 @@ const flowImports = {
     import:
       "import import com.vaadin.flow.component.formlayout.FormLayout.FormItem;",
   },
-  "leiskator-grid": {
+  "vaadin-grid": {
     name: "Grid",
     import: "import com.vaadin.flow.component.grid.Grid;",
   },

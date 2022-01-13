@@ -16,9 +16,9 @@ export default {
     sourcemap: true,
   },
   plugins: [
-    css({ output: "public/bundle.css" }),
+    css({ output: "public/iframe_bundle.css" }),
     resolve(), // tells Rollup how to find date-fns in node_modules
     commonjs(), // converts date-fns to ES modules
-    production && terser(), // minify, but only in production
+    production && terser({ compress: { drop_console: true } }), // minify, but only in production
   ],
 };
