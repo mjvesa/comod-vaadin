@@ -42,6 +42,8 @@ import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-group.js";
 import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-button.js";
 import "@vaadin/vaadin-icons";
 
+import { flowImports } from "./flow_imports";
+
 import { modelToJava } from "./java";
 
 import { init, h, attributesModule, datasetModule } from "snabbdom";
@@ -411,6 +413,11 @@ const javaToAtir = (code) => {
   const elStack = [];
   const createStack = [];
 
+  const tagmakers = [];
+  for (const [key, value] of Object.entries(flowImports)) {
+    tagmakers.push(`const ${value.name} = makeTag("${key}");`);
+  }
+
   const fullCode = `
   const makeTag = function (tag) {
     const setPropAttr = (key, value) => {
@@ -454,7 +461,7 @@ const javaToAtir = (code) => {
       };
     };
   };
-
+/*
   const Button = makeTag("vaadin-button");
   const Div = makeTag("div");
   const Tab = makeTag("vaadin-tab");
@@ -463,9 +470,12 @@ const javaToAtir = (code) => {
   const VerticalLayout = makeTag("vaadin-vertical-layout");
   const HorizontalLayout = makeTag("vaadin-horizontal-layout");
   const IronIcon = makeTag("iron-icon");
+  */
+  ${tagmakers.join("\n")}
   ${typelessJavaTemplate}
 `;
 
+  console.log(JSON.stringify(tagmakers));
   const thizz = {
     add: () => {
       if (elStack[elStack.length - 2] !== thizz) {
@@ -505,20 +515,6 @@ const isJavaComponent = (content) => {
   return (
     content.includes(JAVA_TEMPLATE_BEGIN) && content.includes(JAVA_TEMPLATE_END)
   );
-};
-
-const parseComponent = (tag, content) => {
-  if (isWebComponent(content)) {
-    const htmlContent = content.match(/html`([\s\S]*)`;/)[1];
-    const tree = HTMLToATIR(htmlContent);
-    components[tag] = tree;
-    return tree;
-  } else if (isJavaComponent(content)) {
-    const tree = javaToAtir(content);
-    components[tag] = tree;
-    return tree;
-  }
-  return "";
 };
 
 const ATIRToXML = (atir) => {
@@ -590,7 +586,13 @@ const modelToDOM = (code, inert = false) => {
           //const style = document.createElement("style");
           //style.textContent = storedDesigns.designs[tag].css;
           //current.shadowRoot.appendChild(style);
-          current.children.push(modelToDOM(components[tag], true));
+          tree.push(current);
+          current = {
+            tag: "div",
+            attributes: { draggable: "true" },
+            dataset: { nodeId: index },
+            children: [modelToDOM(components[tag], true)],
+          };
         } else {
           tree.push(current);
           current = { tag, attributes: {}, dataset: {}, children: [] };
@@ -614,10 +616,12 @@ const modelToDOM = (code, inert = false) => {
       case "=": {
         const tos = stack.pop();
         const nos = stack.pop().replace("data-temp-", ""); // for live mode
-        if (nos === "textContent") {
-          current.children.push(tos);
-        } else {
-          current.attributes[nos] = tos;
+        if (!nos.startsWith("@")) {
+          if (nos === "textContent") {
+            current.children.push(tos);
+          } else {
+            current.attributes[nos] = tos;
+          }
         }
         break;
       }
@@ -635,15 +639,46 @@ const modelToDOM = (code, inert = false) => {
 
 const updateComponent = (tree, src) => {
   if (isJavaComponent(src)) {
-    const javaCode = modelToJava(tree);
+    const { code: javaCode, importStrings } = modelToJava(tree);
     const startIndex = src.indexOf("\n", src.indexOf(JAVA_TEMPLATE_BEGIN));
     const endIndex = src.indexOf(JAVA_TEMPLATE_END);
-    return src.slice(0, startIndex + 1) + javaCode + src.slice(endIndex - 1);
-    // 1. Get java code for tree
-    // 2. replace the code between the markers
+    const updatedJavaCode =
+      src.slice(0, startIndex + 1) + javaCode + src.slice(endIndex - 1);
+
+    // 1. Split at first semicolon, if trimmed string starts with package, then store that as package declaration
+    // 2. for each importString, check if it is found in the file. If not, add import statement to the top
+
+    const firstSemicolonIndex = updatedJavaCode.indexOf(";");
+    let packageDecl = updatedJavaCode.slice(0, firstSemicolonIndex + 1);
+    packageDecl = packageDecl.trim().startsWith("package") ? packageDecl : "";
+    let rest = updatedJavaCode.slice(
+      firstSemicolonIndex + 1,
+      updatedJavaCode.length
+    );
+    for (const importString of importStrings) {
+      if (!rest.includes(importString)) {
+        rest = `${importString}\n${rest}`;
+      }
+    }
+
+    return packageDecl + rest;
   } else if (isWebComponent(src)) {
-    return src.replace(/html`([\s\S]*)`;/, "html`" + ATIRToXML(tree) + "`;");
+    return src.replace(/html`([\s\S]*?)`;/, "html`" + ATIRToXML(tree) + "`;");
   }
+};
+
+const parseComponent = (tag, content) => {
+  if (isWebComponent(content)) {
+    const htmlContent = content.match(/html`([\s\S]*?)`;/)[1];
+    const tree = HTMLToATIR(htmlContent);
+    components[tag] = tree;
+    return tree;
+  } else if (isJavaComponent(content)) {
+    const tree = javaToAtir(content);
+    components[tag] = tree;
+    return tree;
+  }
+  return "";
 };
 
 let initialRender = true;

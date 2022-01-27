@@ -1,4 +1,4 @@
-const flowImports = {
+export const flowImports = {
   a: {
     name: "Anchor",
     import: "import com.vaadin.flow.component.html.Anchor;",
@@ -190,5 +190,3 @@ const flowImports = {
     import: "import com.vaadin.flow.component.dialog.Dialog;",
   },
 };
-
-export default flowImports;
