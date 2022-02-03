@@ -406,7 +406,14 @@ const javaToAtir = (code) => {
   const javaTemplate = code.slice(code.indexOf("\n", index), index2);
   const typelessJavaTemplate = javaTemplate
     .replace(/^\s*([A-Z]\S*)/gm, "let")
-    .replace(/this/g, "thizz");
+    .replace(/this/g, "thizz")
+    .replace(
+      /([a-zA-Z][a-zA-Z0-9]*)\s*=\s*([a-zA-Z][a-zA-Z0-9]*)/,
+      (a, b, c) => {
+        return `${c}.setAttribute("__variableName","${b}")`;
+      }
+    );
+
   console.log(typelessJavaTemplate);
   let result = [];
   let isFirst = true;
