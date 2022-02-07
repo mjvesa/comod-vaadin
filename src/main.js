@@ -134,7 +134,7 @@ const paletteContent = [
       ["h6", ["h6", "(", "textContent", "h6 header", "=", ")"]],
       ["hr", ["hr", "(", "style", "width:100px;", "=", ")"]],
       ["header", ["header", "(", ")"]],
-      ["image", ["image", "(", ")"]],
+      ["img", ["img", "(", ")"]],
       ["input text", ["input", "(", "type", "text", "=", ")"]],
       ["input range", ["input", "(", "type", "range", "=", ")"]],
       ["label", ["label", "(", ")"]],
@@ -408,7 +408,7 @@ const javaToAtir = (code) => {
     .replace(/^\s*([A-Z]\S*)/gm, "let")
     .replace(/this/g, "thizz")
     .replace(
-      /([a-zA-Z][a-zA-Z0-9]*)\s*=\s*([a-zA-Z][a-zA-Z0-9]*)/,
+      /([a-zA-Z][a-zA-Z0-9]*)\s*=\s*([a-zA-Z][a-zA-Z0-9]*)\s*;/g,
       (a, b, c) => {
         return `${c}.setAttribute("__variableName","${b}")`;
       }
@@ -426,18 +426,17 @@ const javaToAtir = (code) => {
   }
 
   const fullCode = `
-  const makeTag = function (tag) {
+  const Element = function (tag) {
     const setPropAttr = (key, value) => {
       result.push(key);
       result.push(value);
       result.push("=");
     };
 
-    return function () {
       createStack.push(tag);
       console.log("created new " + tag);
       elStack.push(this);
-      this.add = (el) => {
+      this.appendChild = (el) => {
         console.log(tag + " : " + elStack);
         // If this is not the second last element, then remove elements until this one is left and add back the new one
         if (elStack[elStack.length - 2] !== this) {
@@ -451,46 +450,28 @@ const javaToAtir = (code) => {
         result.push(createStack.pop());
         result.push("(");
       };
-      this.getElement = () => {
-        return {
-          setAttribute: setPropAttr,
-          setProperty: setPropAttr,
-          setText: (value) => {
-            result.push("textContent");
-            result.push(value);
-            result.push("=");
-          },
-        };
+      this.setAttribute = setPropAttr;
+      this.setText =  (value) => {
+        result.push("textContent");
+        result.push(value);
+        result.push("=");
       };
 
       this.toString = () => {
         return tag;
       };
-    };
   };
-/*
-  const Button = makeTag("vaadin-button");
-  const Div = makeTag("div");
-  const Tab = makeTag("vaadin-tab");
-  const Tabs = makeTag("vaadin-tabs");
-  const TextField = makeTag("vaadin-text-field");
-  const VerticalLayout = makeTag("vaadin-vertical-layout");
-  const HorizontalLayout = makeTag("vaadin-horizontal-layout");
-  const IronIcon = makeTag("iron-icon");
-  */
-  ${tagmakers.join("\n")}
   ${typelessJavaTemplate}
 `;
 
-  console.log(JSON.stringify(tagmakers));
-  const thizz = {
-    add: () => {
-      if (elStack[elStack.length - 2] !== thizz) {
+  const root = {
+    appendChild: () => {
+      if (elStack[elStack.length - 2] !== root) {
         const latest = elStack.pop();
-        while (elStack.pop() !== thizz) {
+        while (elStack.pop() !== root) {
           result.push(")");
         }
-        elStack.push(thizz);
+        elStack.push(root);
         elStack.push(latest);
       } else if (!isFirst) {
         result.push(")");
@@ -501,7 +482,7 @@ const javaToAtir = (code) => {
       result.push("(");
     },
   };
-  elStack.push(thizz);
+  elStack.push(root);
   eval(fullCode);
   elStack.pop();
   elStack.forEach((el) => {
@@ -662,13 +643,15 @@ const updateComponent = (tree, src) => {
       firstSemicolonIndex + 1,
       updatedJavaCode.length
     );
+
+    let importBlock = "";
     for (const importString of importStrings) {
       if (!rest.includes(importString)) {
-        rest = `${importString}\n${rest}`;
+        importBlock = `${importBlock}\n${importString}`;
       }
     }
 
-    return packageDecl + rest;
+    return packageDecl + "\n" + importBlock + "\n" + rest;
   } else if (isWebComponent(src)) {
     return src.replace(/html`([\s\S]*?)`;/, "html`" + ATIRToXML(tree) + "`;");
   }

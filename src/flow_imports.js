@@ -31,7 +31,7 @@ export const flowImports = {
     import: "import com.vaadin.flow.component.html.Header;",
   },
   hr: { name: "Hr", import: "import com.vaadin.flow.component.html.Hr;" },
-  image: {
+  img: {
     name: "Image",
     import: "import com.vaadin.flow.component.html.Image;",
   },
@@ -87,8 +87,9 @@ export const flowImports = {
     import: "import com.vaadin.flow.component.radiobutton.RadioButtonGroup;",
   },
   "vaadin-radio-button": {
-    name: "RadioButton",
-    import: "import com.vaadin.flow.component.radiobutton.RadioButton;",
+    name: "GeneratedVaadinRadioButton",
+    import:
+      "import com.vaadin.flow.component.radiobutton.GeneratedVaadinRadioButton;",
   },
   "vaadin-button": {
     name: "Button",
