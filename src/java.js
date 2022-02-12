@@ -34,7 +34,7 @@ export const modelToJava = (code) => {
   const varNames = {};
 
   let currentTag = "";
-  let currentVar = "this";
+  let currentVar = "root";
   let currentVarDefinition = "";
 
   importedTags.add("div");

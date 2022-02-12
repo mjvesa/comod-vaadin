@@ -420,11 +420,6 @@ const javaToAtir = (code) => {
   const elStack = [];
   const createStack = [];
 
-  const tagmakers = [];
-  for (const [key, value] of Object.entries(flowImports)) {
-    tagmakers.push(`const ${value.name} = makeTag("${key}");`);
-  }
-
   const fullCode = `
   const Element = function (tag) {
     const setPropAttr = (key, value) => {
