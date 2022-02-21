@@ -1,7 +1,7 @@
 /**
  *  Exporter from model to Flow. Exports full project buildable with maven.
  */
-import flowImports from "./flow_imports.js";
+import { flowImports } from "./flow_imports";
 
 const kebabToPascalCase = (str) => {
   const parts = str.split("-");
@@ -30,19 +30,12 @@ export const modelToJava = (code) => {
   const doubleIndent = singleIndent + singleIndent;
   const importedTags = new Set();
   const stack = [];
-  const tree = [];
   const variableStack = [];
   const varNames = {};
-  let fields = "";
 
-  let variableCount = 0;
-
-  let current = document.createElement("div");
   let currentTag = "";
-  let currentVar = "this";
+  let currentVar = "root";
   let currentVarDefinition = "";
-  let gridHadEntity = false;
-  let importStrings = "";
 
   importedTags.add("div");
 
@@ -54,30 +47,23 @@ export const modelToJava = (code) => {
         currentTag = stack.pop();
         const elementClass = classForTag(currentTag);
 
-        //Create an element in the DOM
-        const old = current;
-        tree.push(current);
-        current = document.createElement(currentTag);
-        old.appendChild(current);
-
-        const varName = "_" + kebabToCamelCase(elementClass);
+        const varName = kebabToCamelCase(elementClass);
         let varCount = varNames[varName] || 0;
         varCount++;
         varNames[varName] = varCount;
         const newVar = varName + (varCount === 1 ? "" : varCount);
-        variableCount++;
 
         if (currentTag === "leiskator-grid") {
           gridHadEntity = false;
           currentVarDefinition = `${elementClass}<GridTypePlaceholder> ${newVar}`;
           result +=
             `${doubleIndent}${currentVarDefinition} = new ${elementClass}<>();\n` +
-            `${doubleIndent}${currentVar}.add(${newVar});\n`;
+            `${doubleIndent}${currentVar}.appendChild(${newVar});\n`;
         } else {
-          currentVarDefinition = `${elementClass} ${newVar}`;
+          currentVarDefinition = `Element ${newVar}`;
           result +=
-            `${doubleIndent}${currentVarDefinition} = new ${elementClass}();\n` +
-            `${doubleIndent}${currentVar}.add(${newVar});\n`;
+            `${doubleIndent}${currentVarDefinition} = new Element("${currentTag}");\n` +
+            `${doubleIndent}${currentVar}.appendChild(${newVar});\n`;
         }
         variableStack.push(currentVar);
         currentVar = newVar;
@@ -88,7 +74,6 @@ export const modelToJava = (code) => {
         break;
       }
       case ")":
-        current = tree.pop();
         currentVar = variableStack.pop();
         break;
       case "=": {
@@ -98,40 +83,21 @@ export const modelToJava = (code) => {
           return;
         }
 
-        if (nos in current) {
-          try {
-            JSON.parse(tos);
-            if (nos === "textContent") {
-              result = result.concat(
-                `        ${currentVar}.getElement().setText("${tos}");\n`
-              );
-            } else {
-              result = result.concat(
-                `${doubleIndent}${currentVar}.getElement().setProperty("${nos}","${tos.replace(
-                  /"/g,
-                  "'"
-                )}");\n`
-              );
-            }
-          } catch (e) {
-            if (nos === "textContent") {
-              result = result.concat(
-                `${doubleIndent}${currentVar}.getElement().setText("${tos.replace(
-                  /"/g,
-                  '\\"'
-                )}");\n`
-              );
-            } else {
-              result = result.concat(
-                `${doubleIndent}${currentVar}.getElement().setProperty("${nos}","${tos}");\n`
-              );
-            }
-          }
+        if (nos === "__variableName") {
+          result = result + `${doubleIndent}${tos} = ${currentVar};\n`;
+        } else if (nos === "textContent") {
+          result = result.concat(
+            `${doubleIndent}${currentVar}.setText("${tos.replace(
+              /"/g,
+              '\\"'
+            )}");\n`
+          );
         } else {
           result = result.concat(
-            `${doubleIndent}${currentVar}.getElement().setAttribute("${nos}","${tos}");\n`
+            `${doubleIndent}${currentVar}.setAttribute("${nos}","${tos}");\n`
           );
         }
+
         break;
       }
       default:
@@ -139,9 +105,9 @@ export const modelToJava = (code) => {
     }
   });
 
-  importedTags.forEach((tag) => {
-    importStrings = importStrings.concat(`${flowImports[tag].import}\n`);
-  });
+  const importStrings = Array.from(importedTags).map(
+    (tag) => flowImports[tag].import
+  );
 
-  return result;
+  return { code: result, importStrings };
 };

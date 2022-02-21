@@ -1,4 +1,4 @@
-const flowImports = {
+export const flowImports = {
   a: {
     name: "Anchor",
     import: "import com.vaadin.flow.component.html.Anchor;",
@@ -31,7 +31,7 @@ const flowImports = {
     import: "import com.vaadin.flow.component.html.Header;",
   },
   hr: { name: "Hr", import: "import com.vaadin.flow.component.html.Hr;" },
-  image: {
+  img: {
     name: "Image",
     import: "import com.vaadin.flow.component.html.Image;",
   },
@@ -87,8 +87,9 @@ const flowImports = {
     import: "import com.vaadin.flow.component.radiobutton.RadioButtonGroup;",
   },
   "vaadin-radio-button": {
-    name: "RadioButton",
-    import: "import com.vaadin.flow.component.radiobutton.RadioButton;",
+    name: "GeneratedVaadinRadioButton",
+    import:
+      "import com.vaadin.flow.component.radiobutton.GeneratedVaadinRadioButton;",
   },
   "vaadin-button": {
     name: "Button",
@@ -190,5 +191,3 @@ const flowImports = {
     import: "import com.vaadin.flow.component.dialog.Dialog;",
   },
 };
-
-export default flowImports;
