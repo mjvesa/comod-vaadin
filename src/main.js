@@ -41,6 +41,7 @@ import "@vaadin/vaadin-dialog/theme/lumo/vaadin-dialog.js";
 import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-group.js";
 import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-button.js";
 import "@vaadin/vaadin-icons";
+import "@vaadin/vaadin-icon";
 
 import { flowImports } from "./flow_imports";
 
@@ -58,67 +59,6 @@ template.innerHTML =
 document.head.appendChild(template.content);
 
 const paletteContent = [
-  [
-    "<h2>Templates</h2>",
-    [
-      [
-        "login-form",
-        [
-          "div",
-          "  (",
-          "style",
-          "width: 100%; height: 100%",
-          "=",
-          "div",
-          "(",
-          "style",
-          "width: 100%; display:grid;grid-template-columns: 10em auto; background-color: #ddf;padding: 1em; box-sizing:border-box;",
-          "=",
-          "span",
-          "(",
-          "textContent",
-          " name",
-          "=",
-          ")",
-          "vaadin-text-field",
-          "(",
-          ")",
-          "span",
-          "(",
-          "textContent",
-          " password",
-          "=",
-          ")",
-          "vaadin-password-field",
-          "(",
-          ")",
-          "span",
-          "(",
-          ")",
-          "span",
-          "(",
-          "style",
-          " display:flex",
-          "=",
-          "vaadin-button",
-          "(",
-          "textContent",
-          "login",
-          "=",
-          ")",
-          "vaadin-button",
-          "(",
-          "textContent",
-          "register",
-          "=",
-          ")",
-          ")",
-          ")",
-          "  )",
-        ],
-      ],
-    ],
-  ],
   [
     "<h2>Native HTML</h2>",
     [
@@ -352,6 +292,7 @@ const paletteContent = [
   [
     "<h2>Misc</h2>",
     [
+      ["vaadin-icon", ["vaadin-icon", "(", ")"]],
       ["dialog", ["vaadin-dialog", "(", ")"]],
       ["notification", ["vaadin-notification", "(", ")"]],
       ["progress-bar", ["vaadin-progress-bar", "(", ")"]],
