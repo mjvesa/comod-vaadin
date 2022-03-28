@@ -1,111 +1,62 @@
 export const vaadinComponentImports = {
-  "vaadin-accordion": [
-    'import "@vaadin/vaadin-accordion/theme/lumo/vaadin-accordion.js"',
+  "vaadin-accordion": ['import "@vaadin/accordion"'],
+  "vaadin-app-layout": ['import "@vaadin/app-layout"'],
+  "vaadin-drawer-toggle": ['import "@vaadin/app-layout/drawer-toggle.js"'],
+  "vaadin-avatar": ['"import "@vaadin/avatar"'],
+  "vaadin-avatar-group": ['"import "@vaadin/avatar-group"'],
+  "vaadin-button": ['import "@vaadin/button"'],
+  "vaadin-checkbox": ['import "@vaadin/checkbox"'],
+  "vaadin-checkbox-group": ['import "@vaadin/checkbox"'],
+  "vaadin-combo-box": ['import "@vaadin/combo-box"'],
+  "vaadin-context-menu": ['import "@vaadin/context-menu"'],
+  "vaadin-custom-field": ['import "@vaadin/custom-field"'],
+  "vaadin-date-picker": ['import "@vaadin/date-picker"'],
+  "vaadin-date-time-picker": ['import "@vaadin/date-time-picker"'],
+  "vaadin-details": ['import "@vaadin/details"'],
+  "vaadin-dialog": ['import "@vaadin/dialog"'],
+  "vaadin-email-field": ['import "@vaadin/email-field"'],
+  "vaadin-form-layout": ['import "@vaadin/form-layout"'],
+  "vaadin-grid": ['import "@vaadin/grid"'],
+  "vaadin-grid-column-group": [
+    "import '@vaadin/grid/vaadin-grid-column-group.js'",
   ],
-  "vaadin-notification": [
-    'import "@vaadin/vaadin-notification/theme/lumo/vaadin-notification.js"',
+  "vaadin-grid-filter-column": [
+    "import '@vaadin/grid/vaadin-grid-filter-column.js'",
   ],
-  "vaadin-checkbox": [
-    'import "@vaadin/vaadin-checkbox/theme/lumo/vaadin-checkbox.js"',
+  "vaadin-grid-selection-column": [
+    "import '@vaadin/grid/vaadin-grid-selection-column.js'",
   ],
-  "vaadin-cehckbox-group": [
-    'import "@vaadin/vaadin-checkbox/theme/lumo/vaadin-checkbox-group.js"',
+  "vaadin-grid-sort-column": [
+    "import '@vaadin/grid/vaadin-grid-sort-column.js'",
   ],
-  "vaadin-button": [
-    'import "@vaadin/vaadin-button/theme/lumo/vaadin-button.js"',
+  "vaadin-grid-tree-column": [
+    "import '@vaadin/grid/vaadin-grid-tree-column.js';]",
   ],
-  "vaadin-overlay": [
-    'import "@vaadin/vaadin-overlay/theme/lumo/vaadin-overlay.js"',
-  ],
-  "vaadin-date-picker": [
-    'import "@vaadin/vaadin-date-picker/theme/lumo/vaadin-date-picker.js"',
-  ],
-  "vaadin-split-layout": [
-    'import "@vaadin/vaadin-split-layout/theme/lumo/vaadin-split-layout.js"',
-  ],
-  "vaadin-progress-bar": [
-    'import "@vaadin/vaadin-progress-bar/theme/lumo/vaadin-progress-bar.js"',
-  ],
-  "vaadin-combo-box-item": [
-    'import "@vaadin/vaadin-combo-box/src/vaadin-combo-box-item.js"',
-  ],
-  "vaadin-combo-box-light": [
-    'import "@vaadin/vaadin-combo-box/theme/lumo/vaadin-combo-box-light.js"',
-  ],
-  "vaadin-combo-box-dropdown": [
-    'import "@vaadin/vaadin-combo-box/src/vaadin-combo-box-dropdown.js"',
-  ],
-  "vaadin-combo-box-dropdown-wrapper": [
-    'import "@vaadin/vaadin-combo-box/src/vaadin-combo-box-dropdown-wrapper.js"',
-  ],
-  "vaadin-combo-box": [
-    'import "@vaadin/vaadin-combo-box/theme/lumo/vaadin-combo-box.js"',
-  ],
-  "vaadin-custom-field": [
-    'import "@vaadin/vaadin-custom-field/theme/lumo/vaadin-custom-field.js"',
-  ],
-  "vaadin-text-field": [
-    'import "@vaadin/vaadin-text-field/theme/lumo/vaadin-text-field.js"',
-  ],
-  "vaadin-number-field": [
-    'import "@vaadin/vaadin-text-field/theme/lumo/vaadin-number-field.js"',
-  ],
-  "vaadin-email-field": [
-    'import "@vaadin/vaadin-text-field/theme/lumo/vaadin-email-field.js"',
-  ],
-  "vaadin-time-picker": [
-    'import "@vaadin/vaadin-time-picker/theme/lumo/vaadin-time-picker.js"',
-  ],
-  "vaadin-password-field": [
-    'import "@vaadin/vaadin-text-field/theme/lumo/vaadin-password-field.js"',
-  ],
-  "vaadin-text-area": [
-    'import "@vaadin/vaadin-text-field/theme/lumo/vaadin-text-area.js"',
-  ],
-  "vaadin-context-menu": [
-    'import "@vaadin/vaadin-context-menu/theme/lumo/vaadin-context-menu.js"',
-  ],
-  "vaadin-device-detector": [
-    'import "@vaadin/vaadin-context-menu/src/vaadin-device-detector.js"',
-  ],
-  "vaadin-context-menu-overlay": [
-    'import "@vaadin/vaadin-context-menu/src/vaadin-context-menu-overlay.js"',
-  ],
-  "vaadin-tabs": ['import "@vaadin/vaadin-tabs/theme/lumo/vaadin-tabs.js"'],
-  "vaadin-tab": ['import "@vaadin/vaadin-tabs/theme/lumo/vaadin-tab.js"'],
-  "vaadin-horizontal-layout": [
-    'import "@vaadin/vaadin-ordered-layout/theme/lumo/vaadin-horizontal-layout.js"',
-  ],
-  "vaadin-vertical-layout": [
-    'import "@vaadin/vaadin-ordered-layout/theme/lumo/vaadin-vertical-layout.js"',
-  ],
-  "vaadin-form-layout": [
-    'import "@vaadin/vaadin-form-layout/theme/lumo/vaadin-form-layout.js"',
-  ],
-  "vaadin-form-item": [
-    'import "@vaadin/vaadin-form-layout/theme/lumo/vaadin-form-item.js"',
-  ],
-  "vaadin-list-box": [
-    'import "@vaadin/vaadin-list-box/theme/lumo/vaadin-list-box.js"',
-  ],
-  "vaadin-select": ['import "@vaadin/vaadin-select/src/vaadin-select.js"'],
-  "vaadin-upload-file": [
-    'import "@vaadin/vaadin-upload/src/vaadin-upload-file.js"',
-  ],
-  "vaadin-upload": [
-    'import "@vaadin/vaadin-upload/theme/lumo/vaadin-upload.js"',
-  ],
-  "vaadin-dialog": [
-    'import "@vaadin/vaadin-dialog/theme/lumo/vaadin-dialog.js"',
-  ],
-  "vaadin-radio-group": [
-    'import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-group.js"',
-  ],
-  "vaadin-radio-button": [
-    'import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-button.js"',
-  ],
-  "vaadin-icon": [
-    'import "@vaadin/vaadin-icons"',
-    'import "@vaadin/vaadin-icon"',
-  ],
+
+  "vaadin-horizontal-layout": ['import "@vaadin/horizontal-layout"'],
+  "vaadin-icon": ['import "@vaadin/icons"', 'import "@vaadin/icon"'],
+  "vaadin-integer-field": ['import "@vaadin/integer-field"'],
+  "vaadin-item": ['import "@vaadin/item"'],
+  "vaadin-list-box": ['import "@vaadin/list-box"'],
+  "vaadin-login-overlay": ['import "@vaadin/login"'],
+  "vaadin-menu-bar": ['import "@vaadin/menu-bar"'],
+  "vaadin-message-input": ['import "@vaadin/message-input"'],
+  "vaadin-message-list": ['import "@vaadin/message-list"'],
+  "vaadin-notification": ['import "@vaadin/notification"'],
+  "vaadin-number-field": ['import "@vaadin/number-field"'],
+  "vaadin-password-field": ['import "@vaadin/password-field"'],
+  "vaadin-progress-bar": ['import "@vaadin/progress-bar"'],
+  "vaadin-radio-group": ['import "@vaadin/radio-group"'],
+  "vaadin-radio-button": ['import "@vaadin/radio-button"'],
+  "vaadin-scroller": ['import "@vaadin/scroller"'],
+  "vaadin-select": ['import "@vaadin/select"'],
+  "vaadin-split-layout": ['import "@vaadin/split-layout"'],
+  "vaadin-tabs": ['import "@vaadin/tabs"'],
+  "vaadin-tab": ['import "@vaadin/tabs"'],
+  "vaadin-text-area": ['import "@vaadin/text-area"'],
+  "vaadin-text-field": ['import "@vaadin/text-field"'],
+  "vaadin-time-picker": ['import "@vaadin/time-picker"'],
+  "vaadin-upload": ['import "@vaadin/upload"'],
+  "vaadin-virtual-list": ['import "@vaadin/virtual-list"'],
+  "vaadin-vertical-layout": ['import "@vaadin/ordered-layout"'],
 };

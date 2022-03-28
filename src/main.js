@@ -1,7 +1,6 @@
 import "@vaadin/vaadin-lumo-styles/all-imports.js";
 
 import "@vaadin/vaadin-accordion/theme/lumo/vaadin-accordion.js";
-import "@vaadin/vaadin-accordion/theme/lumo/vaadin-accordion.js";
 import "@vaadin/vaadin-notification/theme/lumo/vaadin-notification.js";
 import "@vaadin/vaadin-checkbox/theme/lumo/vaadin-checkbox.js";
 import "@vaadin/vaadin-checkbox/theme/lumo/vaadin-checkbox-group.js";
