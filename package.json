@@ -37,7 +37,7 @@
     ]
   },
   "dependencies": {
-    "@vaadin/vaadin-core": "^21.0.9",
+    "@vaadin/vaadin-core": "^23.0.3",
     "snabbdom": "^3.2.0"
   },
   "devDependencies": {
