@@ -353,7 +353,8 @@ const updateComponent = (tag, tree, src) => {
     for (const componentTag of tags) {
       if (componentTag in vaadinComponentImports) {
         for (const importDecl of vaadinComponentImports[componentTag]) {
-          if (!src.includes(importDecl)) {
+          const singleQuote = importDecl.replace(/"/g, "'");
+          if (!(src.includes(importDecl) || src.includes(singleQuote))) {
             src = importDecl + ";\n" + src;
           }
         }
@@ -367,7 +368,6 @@ const updateComponent = (tag, tree, src) => {
           commonIndex < componentPath.length;
           commonIndex++
         ) {}
-        debugger;
         const backtrackCount = currentPath.length - commonIndex - 1;
         const path = new Array(backtrackCount)
           .fill("..")
