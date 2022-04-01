@@ -1,7 +1,6 @@
 import "@vaadin/vaadin-lumo-styles/all-imports.js";
 
 import "@vaadin/vaadin-accordion/theme/lumo/vaadin-accordion.js";
-import "@vaadin/vaadin-accordion/theme/lumo/vaadin-accordion.js";
 import "@vaadin/vaadin-notification/theme/lumo/vaadin-notification.js";
 import "@vaadin/vaadin-checkbox/theme/lumo/vaadin-checkbox.js";
 import "@vaadin/vaadin-checkbox/theme/lumo/vaadin-checkbox-group.js";
@@ -40,13 +39,15 @@ import "@vaadin/vaadin-upload/theme/lumo/vaadin-upload.js";
 import "@vaadin/vaadin-dialog/theme/lumo/vaadin-dialog.js";
 import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-group.js";
 import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-button.js";
-import "@vaadin/vaadin-icons";
-import "@vaadin/vaadin-icon";
+import "@vaadin/vaadin-icons/vaadin-icons.js";
+import "@vaadin/vaadin-icon/vaadin-icon.js";
+import "@vaadin/virtual-list/theme/lumo/vaadin-virtual-list.js";
 
 import { flowImports } from "./flow_imports";
 
+import { paletteContent } from "./palette";
+import { vaadinComponentImports } from "./component_imports";
 import { modelToJava } from "./java";
-
 import { init, h, attributesModule, datasetModule } from "snabbdom";
 
 const patch = init([attributesModule, datasetModule]);
@@ -57,250 +58,6 @@ const template = document.createElement("template");
 template.innerHTML =
   '<custom-style><style include="lumo-color lumo-typography lumo-utility lumo-badge"></style></custom-style>';
 document.head.appendChild(template.content);
-
-const paletteContent = [
-  [
-    "<h2>Native HTML</h2>",
-    [
-      ["a", ["a", "(", ")"]],
-      ["article", ["article", "(", ")"]],
-      ["aside", ["aside", "(", ")"]],
-      ["div", ["div", "(", ")"]],
-      ["h1", ["h1", "(", "textContent", "h1 header", "=", ")"]],
-      ["h2", ["h2", "(", "textContent", "h2 header", "=", ")"]],
-      ["h3", ["h3", "(", "textContent", "h3 header", "=", ")"]],
-      ["h4", ["h4", "(", "textContent", "h4 header", "=", ")"]],
-      ["h5", ["h5", "(", "textContent", "h5 header", "=", ")"]],
-      ["h6", ["h6", "(", "textContent", "h6 header", "=", ")"]],
-      ["hr", ["hr", "(", "style", "width:100px;", "=", ")"]],
-      ["header", ["header", "(", ")"]],
-      ["img", ["img", "(", ")"]],
-      ["input text", ["input", "(", "type", "text", "=", ")"]],
-      ["input range", ["input", "(", "type", "range", "=", ")"]],
-      ["label", ["label", "(", ")"]],
-      ["li", ["li", "(", ")"]],
-      ["p", ["p", "(", "textContent", "Paragraph", "=", ")"]],
-      ["span", ["span", "(", "textContent", "Span", "=", ")"]],
-      [
-        "ol",
-        [
-          "ol",
-          "(",
-          "li",
-          "(",
-          "textContent",
-          "item1",
-          "=",
-          ")",
-          "li",
-          "(",
-          "textContent",
-          "item2",
-          "=",
-          ")",
-          ")",
-        ],
-      ],
-      [
-        "ul",
-        [
-          "ul",
-          "(",
-          "li",
-          "(",
-          "textContent",
-          "item1",
-          "=",
-          ")",
-          "li",
-          "(",
-          "textContent",
-          "item2",
-          "=",
-          ")",
-          ")",
-        ],
-      ],
-    ],
-  ],
-  [
-    "<h2>Buttons</h2>",
-    [
-      ["button", ["vaadin-button", "(", ")"]],
-      ["checkbox", ["vaadin-checkbox", "(", ")"]],
-      [
-        "checkbox-group",
-        [
-          "vaadin-checkbox-group",
-          "(",
-          "vaadin-checkbox",
-          "(",
-          ")",
-          "vaadin-checkbox",
-          "(",
-          ")",
-          ")",
-        ],
-      ],
-      ["radio-button", ["vaadin-radio-button", "(", ")"]],
-      [
-        "radio-group",
-        [
-          "vaadin-radio-group",
-          "(",
-          "vaadin-radio-button",
-          "(",
-          ")",
-          "vaadin-radio-button",
-          "(",
-          ")",
-          ")",
-        ],
-      ],
-      [
-        "tabs",
-        [
-          "vaadin-tabs",
-          "(",
-          "vaadin-tab",
-          "(",
-          "textContent",
-          "Tab1",
-          "=",
-          ")",
-          "vaadin-tab",
-          "(",
-          "textContent",
-          "Tab2",
-          "=",
-          ")",
-          ")",
-        ],
-      ],
-      ["tab", ["vaadin-tab", "(", ")"]],
-    ],
-  ],
-
-  [
-    "<h2>Fields</h2>",
-    [
-      ["combo-box", ["vaadin-combo-box", "(", ")"]],
-      ["context-menu", ["vaadin-context-menu", "(", ")"]],
-      ["item", ["vaadin-item", "(", ")"]],
-      ["date-picker", ["vaadin-date-picker", "(", ")"]],
-      ["grid", ["leiskator-grid", "(", ")"]],
-      ["list-box", ["vaadin-list-box", "(", ")"]],
-      ["text-field", ["vaadin-text-field", "(", ")"]],
-      ["text-area", ["vaadin-text-area", "(", ")"]],
-      ["time-picker", ["vaadin-time-picker", "(", ")"]],
-      ["password-field", ["vaadin-password-field", "(", ")"]],
-      ["email-field", ["vaadin-email-field", "(", ")"]],
-      ["number-field", ["vaadin-number-field", "(", ")"]],
-      ["custom-field", ["vaadin-custom-field", "(", ")"]],
-    ],
-  ],
-  [
-    "<h2>Layout</h2>",
-    [
-      ["accordion", ["vaadin-accordion", "(", ")"]],
-      ["app-layout", ["vaadin-app-layout", "(", ")"]],
-      ["form-layout", ["vaadin-form-layout", "(", ")"]],
-      ["form-item", ["vaadin-form-item", "(", ")"]],
-      [
-        "horizontal-layout",
-        [
-          "vaadin-horizontal-layout",
-          "(",
-          "span",
-          "(",
-          "textContent",
-          "Placeholder 1",
-          "=",
-          ")",
-          "span",
-          "(",
-          "textContent",
-          "Placeholder 2",
-          "=",
-          ")",
-          ")",
-        ],
-      ],
-      [
-        "vertical-layout",
-        [
-          "vaadin-vertical-layout",
-          "(",
-          "span",
-          "(",
-          "textContent",
-          "Placeholder 1",
-          "=",
-          ")",
-          "span",
-          "(",
-          "textContent",
-          "Placeholder 2",
-          "=",
-          ")",
-          ")",
-        ],
-      ],
-      [
-        "split-layout horizontal",
-        [
-          "vaadin-split-layout",
-          "(",
-          "span",
-          "(",
-          "textContent",
-          "Placeholder 1",
-          "=",
-          ")",
-          "span",
-          "(",
-          "textContent",
-          "Placeholder 2",
-          "=",
-          ")",
-          ")",
-        ],
-        "split-layout vertical",
-        [
-          "vaadin-split-layout",
-          "(",
-          "orientation",
-          "vertical",
-          "=",
-          "span",
-          "(",
-          "textContent",
-          "Placeholder 1",
-          "=",
-          ")",
-          "span",
-          "(",
-          "textContent",
-          "Placeholder 2",
-          "=",
-          ")",
-          ")",
-        ],
-      ],
-    ],
-  ],
-  [
-    "<h2>Misc</h2>",
-    [
-      ["vaadin-icon", ["vaadin-icon", "(", ")"]],
-      ["dialog", ["vaadin-dialog", "(", ")"]],
-      ["notification", ["vaadin-notification", "(", ")"]],
-      ["progress-bar", ["vaadin-progress-bar", "(", ")"]],
-      ["upload-file", ["vaadin-upload-file", "(", ")"]],
-      ["upload", ["vaadin-upload", "(", ")"]],
-    ],
-  ],
-];
 
 const HTMLToATIR = (html, ignoreHead = false) => {
   const parser = new DOMParser();
@@ -444,6 +201,7 @@ const isJavaComponent = (content) => {
 const ATIRToXML = (atir) => {
   let stack = [];
   let tagTree = [];
+  let tags = new Set();
 
   let currentTag = "";
   let currentClosed = true;
@@ -461,6 +219,8 @@ const ATIRToXML = (atir) => {
         }
         tagTree.push(currentTag);
         currentTag = stack.pop();
+        tags.add(currentTag);
+
         result = result.concat("<" + currentTag);
         hasTextContent = false;
         currentClosed = false;
@@ -493,7 +253,7 @@ const ATIRToXML = (atir) => {
         stack.push(trimmed);
     }
   });
-  return result;
+  return { html: result, tags };
 };
 
 const modelToDOM = (code, inert = false) => {
@@ -515,7 +275,7 @@ const modelToDOM = (code, inert = false) => {
             tag: "div",
             attributes: { draggable: "true" },
             dataset: { nodeId: index },
-            children: [modelToDOM(components[tag], true)],
+            children: [modelToDOM(components[tag].tree, true)],
           };
         } else {
           tree.push(current);
@@ -561,7 +321,7 @@ const modelToDOM = (code, inert = false) => {
   );
 };
 
-const updateComponent = (tree, src) => {
+const updateComponent = (tag, tree, src) => {
   if (isJavaComponent(src)) {
     const { code: javaCode, importStrings } = modelToJava(tree);
     const startIndex = src.indexOf("\n", src.indexOf(JAVA_TEMPLATE_BEGIN));
@@ -589,19 +349,50 @@ const updateComponent = (tree, src) => {
 
     return packageDecl + "\n" + importBlock + "\n" + rest;
   } else if (isWebComponent(src)) {
-    return src.replace(/html`([\s\S]*?)`;/, "html`" + ATIRToXML(tree) + "`;");
+    const { html, tags } = ATIRToXML(tree);
+    for (const componentTag of tags) {
+      if (componentTag in vaadinComponentImports) {
+        for (const importDecl of vaadinComponentImports[componentTag]) {
+          const singleQuote = importDecl.replace(/"/g, "'");
+          if (!(src.includes(importDecl) || src.includes(singleQuote))) {
+            src = importDecl + ";\n" + src;
+          }
+        }
+      } else if (componentTag in components) {
+        const currentPath = components[tag].path.split("/");
+        const componentPath = components[componentTag].path.split("/");
+        let commonIndex = 0;
+        for (
+          ;
+          componentPath[commonIndex] === currentPath[commonIndex] &&
+          commonIndex < componentPath.length;
+          commonIndex++
+        ) {}
+        const backtrackCount = currentPath.length - commonIndex - 1;
+        const path = new Array(backtrackCount)
+          .fill("..")
+          .concat(componentPath.slice(commonIndex))
+          .join("/");
+        const importDecl = `import "${path.replace(".ts", "")}"`;
+        if (!src.includes(importDecl)) {
+          src = importDecl + ";\n" + src;
+        }
+      }
+    }
+
+    return src.replace(/html`([\s\S]*?)`;/, "html`" + html + "`;");
   }
 };
 
-const parseComponent = (tag, content) => {
+const parseComponent = (tag, content, path) => {
   if (isWebComponent(content)) {
     const htmlContent = content.match(/html`([\s\S]*?)`;/)[1];
     const tree = HTMLToATIR(htmlContent);
-    components[tag] = tree;
+    components[tag] = { tree, path };
     return tree;
   } else if (isJavaComponent(content)) {
     const tree = javaToAtir(content);
-    components[tag] = tree;
+    components[tag] = { tree, path };
     return tree;
   }
   return "";
@@ -610,7 +401,7 @@ const parseComponent = (tag, content) => {
 let initialRender = true;
 let oldvnode;
 const render = (tag, tree, target) => {
-  components[tag] = tree;
+  components[tag] = { ...components[tag], tree };
   const vnode = modelToDOM(tree);
   if (initialRender) {
     patch(target, vnode);
