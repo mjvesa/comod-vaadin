@@ -21,7 +21,7 @@
   "categories": [
     "Other"
   ],
-  "license": "Copyright (c) 2021 Matti Vesa, parts from Unide are MIT licenced",
+  "license": "Copyright (c) 2021-2022 Matti Vesa, parts from Unide are MIT licenced",
   "engines": {
     "vscode": "^1.32.0"
   },

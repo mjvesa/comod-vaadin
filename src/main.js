@@ -1,5 +1,3 @@
-import "@vaadin/vaadin-lumo-styles/all-imports.js";
-
 import "@vaadin/vaadin-accordion/theme/lumo/vaadin-accordion.js";
 import "@vaadin/vaadin-notification/theme/lumo/vaadin-notification.js";
 import "@vaadin/vaadin-checkbox/theme/lumo/vaadin-checkbox.js";
@@ -40,8 +38,32 @@ import "@vaadin/vaadin-dialog/theme/lumo/vaadin-dialog.js";
 import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-group.js";
 import "@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-button.js";
 import "@vaadin/vaadin-icons/vaadin-icons.js";
+import "@vaadin/vaadin-icons/vaadin-iconset.js";
 import "@vaadin/vaadin-icon/vaadin-icon.js";
 import "@vaadin/virtual-list/theme/lumo/vaadin-virtual-list.js";
+
+import { typography } from "@vaadin/vaadin-lumo-styles/typography.js";
+import { color } from "@vaadin/vaadin-lumo-styles/color.js";
+import { spacing } from "@vaadin/vaadin-lumo-styles/spacing.js";
+import { badge } from "@vaadin/vaadin-lumo-styles/badge.js";
+import { utility } from "@vaadin/vaadin-lumo-styles/utility.js";
+
+const toCSS = (thing) => {
+  const sheet = new CSSStyleSheet();
+  sheet.replaceSync(thing.cssText);
+  return sheet;
+};
+
+document.adoptedStyleSheets = [typography, color, spacing, badge, utility].map(
+  toCSS
+);
+
+// const template = document.createElement("template");
+// template.innerHTML =
+//   '<custom-style><style include="lumo-utility lumo-color lumo-typography lumo-badge"></style></custom-style>';
+// document.head.appendChild(template.content);
+
+// window.ShadyCSS.CustomStyleInterface.processStyles();
 
 import { flowImports } from "./flow_imports";
 
@@ -53,11 +75,6 @@ import { init, h, attributesModule, datasetModule } from "snabbdom";
 const patch = init([attributesModule, datasetModule]);
 
 const components = {};
-
-const template = document.createElement("template");
-template.innerHTML =
-  '<custom-style><style include="lumo-color lumo-typography lumo-utility lumo-badge"></style></custom-style>';
-document.head.appendChild(template.content);
 
 const HTMLToATIR = (html, ignoreHead = false) => {
   const parser = new DOMParser();
