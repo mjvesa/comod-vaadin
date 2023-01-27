@@ -1,12 +1,9 @@
 {
   "name": "leiskator",
   "version": "0.1.0",
-  "description": "Leiskaa pukkaa",
-  "repository": "https://github.com/mjvesa/leiskator",
-  "icon": "public/images/unide_tiny.png",
+  "description": "Vaadin Component Module for GUI Builder",
+  "repository": "https://github.com/mjvesa/comod-vaadin",
   "publisher": "mjvesa",
-  "main": "public/extension.js",
-  "bin": "./cli.js",
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c -w",
@@ -21,21 +18,7 @@
   "categories": [
     "Other"
   ],
-  "license": "Copyright (c) 2021-2022 Matti Vesa, parts from Unide are MIT licenced",
-  "engines": {
-    "vscode": "^1.32.0"
-  },
-  "activationEvents": [
-    "onCommand:extension.leiskator"
-  ],
-  "contributes": {
-    "commands": [
-      {
-        "command": "extension.leiskator",
-        "title": "Leiskator"
-      }
-    ]
-  },
+  "license": "MIT",
   "dependencies": {
     "@vaadin/vaadin-core": "^23.0.3",
     "snabbdom": "^3.2.0"
@@ -43,7 +26,6 @@
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.16.7",
     "@babel/preset-env": "^7.16.7",
-    "@types/vscode": "^1.63.1",
     "babel-jest": "^27.4.6",
     "eslint": "^8.6.0",
     "jest": "^29.0.1",
