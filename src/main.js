@@ -198,6 +198,10 @@ const isWebComponent = (content) => {
   return content.includes("@customElement");
 };
 
+const isReactComponent = (content) => {
+  return content.includes("react-vaadin-components");
+};
+
 const JAVA_TEMPLATE_BEGIN = "// GUI CONSTRUCTION BEGIN";
 const JAVA_TEMPLATE_END = "// GUI CONSTRUCTION END";
 
@@ -421,7 +425,7 @@ const render = (tag, tree, target) => {
   oldvnode = vnode;
 };
 
-window.Comod = {
+export const Comod = {
   palette: paletteContent,
   fileExtensions: ["ts", "java"],
   parse: parseComponent,
@@ -429,6 +433,7 @@ window.Comod = {
   render: render,
 };
 
+window.Comod = Comod;
 console.log("### bundle loaded ###");
 
 console.log(document.styleSheets);
